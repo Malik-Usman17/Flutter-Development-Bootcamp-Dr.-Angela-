@@ -1,5 +1,8 @@
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'question.dart';
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(const QuizApp());
 
@@ -30,28 +33,74 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scoreKeeper = [
-    const Icon(
-      Icons.check,
-      color: Colors.green,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    const Icon(
-      Icons.close,
-      color: Colors.red,
-    )
-  ];
+  List<Icon> scoreKeeper = [];
+
+  void checkAnswer(bool userPickAnswer) {
+    bool correctAnswer = quizBrain.getCorrectAnswer();
+
+    setState(() {
+      if (userPickAnswer == correctAnswer) {
+        scoreKeeper.add(Icon(
+          Icons.check,
+          color: Colors.green,
+        ));
+      } else {
+        scoreKeeper.add(Icon(
+          Icons.close,
+          color: Colors.red,
+        ));
+      }
+      quizBrain.nextQuestion();
+    });
+
+    // setState(() {
+    //   quizBrain.nextQuestion();
+    // });
+  }
+
+  // List<String> questions = [
+  //   'You can lead a cow down stairs but not up stairs.',
+  //   'Approximately one quarter of human bones are in the feet.',
+  //   'A slug\'s blood is green.'
+  // ];
+
+  List<bool> answers = [false, true, true];
+
+  // Question q1 = Question(
+  //     q: 'You can lead a cow down stairs but not up stairs.', a: false);
+
+  // List<Question> questionBank = [
+  //   Question(q: 'You can lead a cow down stairs but not up stairs.', a: false),
+  //   Question(
+  //       q: 'Approximately one quarter of human bones are in the feet.',
+  //       a: false),
+  //   Question(q: 'A slug\'s blood is green.', a: true)
+  // ];
+
+  //int questionNumber = 0;
+
+  // List<Icon> scoreKeeper = [
+  //   const Icon(
+  //     Icons.check,
+  //     color: Colors.green,
+  //   ),
+  //   const Icon(
+  //     Icons.close,
+  //     color: Colors.red,
+  //   ),
+  //   const Icon(
+  //     Icons.close,
+  //     color: Colors.red,
+  //   ),
+  //   const Icon(
+  //     Icons.close,
+  //     color: Colors.red,
+  //   ),
+  //   const Icon(
+  //     Icons.close,
+  //     color: Colors.red,
+  //   )
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +108,14 @@ class _QuizPageState extends State<QuizPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Expanded(
+        Expanded(
           flex: 5,
           child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                //quizBrain.questionBank[questionNumber].questionText!,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25.0, color: Colors.white),
               ),
@@ -87,15 +137,32 @@ class _QuizPageState extends State<QuizPage> {
                 backgroundColor: MaterialStateProperty.all(Colors.green),
               ),
               onPressed: () {
-                setState(() {
-                  scoreKeeper.add(
-                    Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ),
-                  );
-                });
-                //print()
+                checkAnswer(true);
+                //bool correctAnswer = answers[questionNumber];
+                //bool correctAnswer = quizBrain.questionBank[questionNumber].questionAnswer!;
+
+                // bool correctAnswer = quizBrain.getCorrectAnswer();
+                //
+                // if (correctAnswer == true) {
+                //   print('user got it right.');
+                // } else {
+                //   print('user got it wrong.');
+                // }
+                // setState(() {
+                //   quizBrain.nextQuestion();
+                //   //questionNumber++;
+                // });
+
+                // setState(
+                //   () {
+                //     scoreKeeper.add(
+                //       Icon(
+                //         Icons.check,
+                //         color: Colors.green,
+                //       ),
+                //     );
+                //   },
+                // );
               },
             ),
           ),
@@ -115,21 +182,54 @@ class _QuizPageState extends State<QuizPage> {
                 backgroundColor: MaterialStateProperty.all(Colors.red),
               ),
               onPressed: () {
-                //print()
+                //now we cannot use questionBank beacuse we make this member private
+                //quizBrain.questionBank[questionNumber].questionAnswer = true;
+
+                // bool correctAnswer = quizBrain.getCorrectAnswer();
+                //
+                // if (correctAnswer == false) {
+                //   print('user got it right.');
+                // } else {
+                //   print('user got it wrong.');
+                // }
+                //
+                // setState(() {
+                //   quizBrain.nextQuestion();
+                // });
+
+                checkAnswer(false);
               },
             ),
           ),
         ),
         Row(
           children: scoreKeeper,
-          // children: [
-          //   Icon(
-          //     Icons.check,
-          //     color: Colors.green,
-          //   ),
-          //
-          // ],
         )
+        // Row(
+        //   //children: scoreKeeper,
+        //   children: [
+        //     Icon(
+        //       Icons.check,
+        //       color: Colors.green,
+        //     ),
+        //     Icon(
+        //       Icons.close,
+        //       color: Colors.red,
+        //     ),
+        //     Icon(
+        //       Icons.close,
+        //       color: Colors.red,
+        //     ),
+        //     Icon(
+        //       Icons.close,
+        //       color: Colors.red,
+        //     ),
+        //     Icon(
+        //       Icons.close,
+        //       color: Colors.red,
+        //     ),
+        //   ],
+        // )
       ],
     );
   }
